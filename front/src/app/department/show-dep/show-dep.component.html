@@ -1,0 +1,145 @@
+<!-- Button trigger modal -->
+<button
+  type="button"
+  class="btn btn-primary float-end m-2"
+  data-toggle="modal"
+  data-target="#content"
+  (click)="addClick(content)"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  Ajouter un département
+</button>
+
+<!-- Modal Add/Edit -->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ ModalTitle }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="closeClick(); this.modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-add-edit-dep
+      (closeModalEmitter)="closeModal($event)"
+      [department]="department"
+      *ngIf="ActivateAddEditDepComp"
+    ></app-add-edit-dep>
+  </div>
+</ng-template>
+
+<!-- Modal Confirm -->
+<ng-template #confirm let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">{{ModalTitle}}</h4>
+        <button type="button" class="btn-close" aria-describedby="modal-title" (click)="this.modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p><strong> Voulez-vous vraiment supprimer le département <span class="text-primary">"{{department.DepartmentName}}"</span> ?</strong></p>
+        <p>
+            <span class="text-danger">Cette opération ne peut pas être annulée.</span>
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="this.modal.dismiss('cancel click')">Annuler</button>
+        <button type="button" class="btn btn-danger" (click)="deleteClick(department); this.modal.dismiss()">Oui, Supprimer !</button>
+    </div>
+</ng-template>
+
+<notifier-container></notifier-container>
+
+<table
+  class="table table-bordered table-hover table-striped"
+  aria-describedby="Liste des départements"
+>
+  <thead>
+    <tr>
+      <th>  
+          <div class="d-flex flex-row">
+              <input type="text" class="form-control" [(ngModel)]="DepartmentIdFilter" (keyup)="FilterFn()" placeholder='Filtrer'>
+              <button class="btn btn-light" (click)="sortResult('DepartmentId', true)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 9.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+              </svg></button>
+              <button class="btn btn-light" (click)="sortResult('DepartmentId', false)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+              </svg></button>
+          </div>
+          ID
+        </th>
+      <th>
+        <div class="d-flex flex-row">
+            <input type="text" class="form-control" [(ngModel)]="DepartmentNameFilter" (keyup)="FilterFn()" placeholder='Filtrer'>
+            <button class="btn btn-light" (click)="sortResult('DepartmentName', true)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 9.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+              </svg></button>
+              <button class="btn btn-light" (click)="sortResult('DepartmentName', false)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+              </svg></button>
+        </div>
+          Nom
+        </th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let department of DepartmentList">
+      <td>{{ department.DepartmentId }}</td>
+      <td>{{ department.DepartmentName }}</td>
+      <td class="actions">
+        <button
+          class="btn btn-light m-1"
+          data-toggle="modal"
+          data-target="#content"
+          (click)="editClick(content, department)"
+          data-backdrop="static"
+          data-keyboard="false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-pencil-square"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+            />
+          </svg>
+        </button>
+        <button
+          class="btn btn-light m-1"
+          data-toggle="modal"
+          data-target="#confirm"
+          (click)="confirmClick(confirm, department)"
+          data-backdrop="static"
+          data-keyboard="false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-trash"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
+            />
+          </svg>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
